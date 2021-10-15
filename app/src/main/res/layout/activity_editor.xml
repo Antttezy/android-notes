@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    tools:context=".EditorActivity">
+
+    <EditText
+        android:id="@+id/note_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:hint="@string/input_note_hint"
+        android:inputType="textMultiLine"
+        android:importantForAutofill="no" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/save_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save_btn_text"
+        android:enabled="false"
+        android:onClick="save"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel_btn_text"
+        android:onClick="cancel"/>
+</LinearLayout>
