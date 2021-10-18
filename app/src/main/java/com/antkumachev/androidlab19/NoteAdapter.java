@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.antkumachev.androidlab19.models.Note;
+import com.antkumachev.androidlab19.models.Priority;
 import com.antkumachev.androidlab19.views.ColoredView;
 
 import java.util.ArrayList;
@@ -47,8 +50,18 @@ public class NoteAdapter extends BaseAdapter {
             color.setColor(randomColor());
         }
 
-        TextView note = convertView.findViewById(R.id.note_string);
-        note.setText(context.get(position).getCaption());
+        Note note = context.get(position);
+
+        TextView caption = convertView.findViewById(R.id.note_string);
+        caption.setText(note.getCaption());
+
+        ImageView importantSign = convertView.findViewById(R.id.priority_view);
+
+        if (note.getPriority() == Priority.Important) {
+            importantSign.setImageResource(R.drawable.warning);
+        } else {
+            importantSign.setImageDrawable(null);
+        }
 
         return convertView;
     }

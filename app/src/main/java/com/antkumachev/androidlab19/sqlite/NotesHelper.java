@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.antkumachev.androidlab19.models.Note;
+import com.antkumachev.androidlab19.models.Priority;
 
 import java.text.MessageFormat;
 
@@ -23,6 +24,7 @@ public class NotesHelper extends SQLiteOpenHelper {
         public static final String COLUMN_CAPTION = "Caption";
         public static final String COLUMN_CONTENT = "Content";
         public static final String COLUMN_TIME = "Time";
+        public static final String COLUMN_PRIORITY = "Priority";
 
         public static String getCreateStatement() {
 
@@ -31,13 +33,15 @@ public class NotesHelper extends SQLiteOpenHelper {
                             "{1} INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "{2} TEXT," +
                             "{3} TEXT," +
-                            "{4} TIME" +
+                            "{4} TIME," +
+                            "{5} INTEGER" +
                             ");",
                     TABLE_NAME,
                     BaseColumns._ID,
                     COLUMN_CAPTION,
                     COLUMN_CONTENT,
-                    COLUMN_TIME
+                    COLUMN_TIME,
+                    COLUMN_PRIORITY
             );
         }
 
@@ -47,12 +51,14 @@ public class NotesHelper extends SQLiteOpenHelper {
             int captionId = cursor.getColumnIndex(COLUMN_CAPTION);
             int contentId = cursor.getColumnIndex(COLUMN_CONTENT);
             int timeId = cursor.getColumnIndex(COLUMN_TIME);
+            int priorityId = cursor.getColumnIndex(COLUMN_PRIORITY);
 
             String caption = cursor.getString(captionId);
             String content = cursor.getString(contentId);
             long time = cursor.getLong(timeId);
+            Priority priority = Priority.values()[cursor.getInt(priorityId)];
 
-            return new Note(caption, content, time);
+            return new Note(caption, content, time, priority);
         }
 
         public static long insertNote(SQLiteDatabase db, Note note) {
@@ -61,6 +67,7 @@ public class NotesHelper extends SQLiteOpenHelper {
             values.put(COLUMN_CAPTION, note.getCaption());
             values.put(COLUMN_CONTENT, note.getContent());
             values.put(COLUMN_TIME, note.getCreationTime().getTime());
+            values.put(COLUMN_PRIORITY, note.getPriority().ordinal());
             return db.insert(TABLE_NAME, null, values);
         }
 
@@ -73,6 +80,7 @@ public class NotesHelper extends SQLiteOpenHelper {
             values.put(COLUMN_CAPTION, note.getCaption());
             values.put(COLUMN_CONTENT, note.getContent());
             values.put(COLUMN_TIME, note.getCreationTime().getTime());
+            values.put(COLUMN_PRIORITY, note.getPriority().ordinal());
             return db.update(TABLE_NAME, values, MessageFormat.format("{0} = ?", BaseColumns._ID), new String[]{Long.toString(id)});
         }
     }

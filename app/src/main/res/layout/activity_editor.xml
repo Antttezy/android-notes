@@ -17,6 +17,12 @@
         android:inputType="textMultiLine"
         android:importantForAutofill="no" />
 
+    <Spinner
+        android:id="@+id/importance_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"/>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/save_btn"
         android:layout_width="match_parent"

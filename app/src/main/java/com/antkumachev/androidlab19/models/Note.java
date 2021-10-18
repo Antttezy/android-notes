@@ -7,12 +7,18 @@ public class Note implements Serializable {
     private String caption;
     private String content;
     private Time creationTime;
+    private Priority priority;
 
-    public Note(String caption, String content, long creationTime) {
+    public Note(String caption, String content, long creationTime, Priority priority) {
 
         this.caption = caption;
         this.content = content;
         this.creationTime = new Time(creationTime);
+        this.priority = priority;
+    }
+
+    public Note(String caption, String content, long creationTime) {
+        this(caption, content, creationTime, Priority.Default);
     }
 
     public String getCaption() {
@@ -37,5 +43,13 @@ public class Note implements Serializable {
 
     public void setCreationTime(Time creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 }

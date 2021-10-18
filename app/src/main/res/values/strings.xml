@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidLab19</string>
+    <string name="app_name">AndroidLab20</string>
     <string name="add_new_btn_text">Add new</string>
     <string name="edit_btn_text">Edit</string>
     <string name="input_note_hint">Input your note</string>
@@ -8,4 +8,5 @@
     <string name="extra_text_res">EXTRA_TEXT</string>
     <string name="extra_id_res">EXTRA_ID</string>
     <string name="action_id_res">ACTION_ID</string>
+    <string name="importance_description">importance</string>
 </resources>
