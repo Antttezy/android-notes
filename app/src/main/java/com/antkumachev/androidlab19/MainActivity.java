@@ -72,5 +72,6 @@ public class MainActivity extends ActivityBase implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EXTRA_ID = position;
+        editSelected(list);
     }
 }

@@ -6,19 +6,22 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
 import com.antkumachev.androidlab19.models.Note;
+import com.antkumachev.androidlab19.sqlite.NotesHelper;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class MyApp extends Application {
-    private final ArrayList<Note> notes = new ArrayList<>();
     private final ToastHelper toastHelper;
+    private final NotesHelper notesHelper;
+    private Cursor cursor;
 
     protected final int ADD_NOTE = 0x211;
     protected final int EDIT_NOTE = 0x212;
@@ -26,28 +29,51 @@ public class MyApp extends Application {
     public MyApp() {
         super();
         toastHelper = new ToastHelper(R.layout.toast_layout, this);
-        notes.add(new Note("First", "", System.currentTimeMillis()));
-        notes.add(new Note("Second", "", System.currentTimeMillis()));
+        notesHelper = new NotesHelper(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        loadNotes();
+    }
+
+    private void loadNotes () {
+
+        cursor = notesHelper
+                .getReadableDatabase()
+                .rawQuery(MessageFormat.format(
+                        "SELECT * FROM {0}",
+                        NotesHelper.Notes.TABLE_NAME),
+                        null);
     }
 
     public void add(Note note) {
-        notes.add(note);
+
+        NotesHelper.Notes.insertNote(notesHelper.getWritableDatabase(), note);
+        loadNotes();
         toastHelper.show("Note added");
         showNotification(ADD_NOTE, MessageFormat.format("Added note {0}", note.getCaption()));
     }
 
     public Note get(int id) {
-        return notes.get(id);
+
+        cursor.moveToPosition(id);
+        return NotesHelper.Notes.getNote(cursor);
     }
 
     public void set(int id, Note note) {
-        notes.set(id, note);
+
+        cursor.moveToPosition(id);
+        NotesHelper.Notes.updateNote(notesHelper.getWritableDatabase(), note, cursor);
+        loadNotes();
         toastHelper.show("Note edited");
         showNotification(EDIT_NOTE, MessageFormat.format("Edited note {0}", note.getCaption()));
     }
 
     public int size() {
-        return notes.size();
+
+        return cursor.getCount();
     }
 
     private void showNotification(int id, String message) {
