@@ -9,6 +9,8 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 
+import com.antkumachev.androidlab19.models.Note;
+
 public class MainActivity extends ActivityBase implements AdapterView.OnItemClickListener {
     private ListView list;
     private NoteAdapter noteAdapter;
@@ -36,7 +38,7 @@ public class MainActivity extends ActivityBase implements AdapterView.OnItemClic
             Intent intent = new Intent(this, EditorActivity.class);
             intent.putExtra(getString(R.string.action_id_res), EDIT_ACTION);
             intent.putExtra(getString(R.string.extra_id_res), EXTRA_ID);
-            intent.putExtra(getString(R.string.extra_text_res), EXTRA_TEXT);
+            intent.putExtra(EXTRA_NOTE, appContext.get(EXTRA_ID));
             startActivityIfNeeded(intent, EDIT_ACTION);
         }
     }
@@ -49,12 +51,12 @@ public class MainActivity extends ActivityBase implements AdapterView.OnItemClic
             int actionId = data.getExtras().getInt(getString(R.string.action_id_res));
             switch (actionId) {
                 case CREATE_ACTION:
-                    appContext.add(data.getExtras().getString(getString(R.string.extra_text_res)));
+                    appContext.add((Note) data.getExtras().getSerializable(EXTRA_NOTE));
                     break;
 
                 case EDIT_ACTION:
                     appContext.set(data.getExtras().getInt(getString(R.string.extra_id_res)),
-                            data.getExtras().getString(getString(R.string.extra_text_res)));
+                            (Note) data.getExtras().getSerializable(EXTRA_NOTE));
                     break;
 
                 default:
@@ -70,6 +72,5 @@ public class MainActivity extends ActivityBase implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EXTRA_ID = position;
-        EXTRA_TEXT = appContext.get(EXTRA_ID);
     }
 }

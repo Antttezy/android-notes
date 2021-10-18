@@ -7,6 +7,7 @@ public class ActivityBase extends AppCompatActivity {
     protected final int EDIT_ACTION  = 0x14;
     protected String EXTRA_TEXT = "";
     protected int EXTRA_ID = -1;
+    protected final String EXTRA_NOTE = "EXTRA_NOTE";
 
     protected MyApp appContext;
 }

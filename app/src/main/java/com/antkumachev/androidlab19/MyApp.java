@@ -11,11 +11,13 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
+import com.antkumachev.androidlab19.models.Note;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class MyApp extends Application {
-    private final ArrayList<String> notes = new ArrayList<>();
+    private final ArrayList<Note> notes = new ArrayList<>();
     private final ToastHelper toastHelper;
 
     protected final int ADD_NOTE = 0x211;
@@ -24,24 +26,24 @@ public class MyApp extends Application {
     public MyApp() {
         super();
         toastHelper = new ToastHelper(R.layout.toast_layout, this);
-        notes.add("First");
-        notes.add("Second");
+        notes.add(new Note("First", "", System.currentTimeMillis()));
+        notes.add(new Note("Second", "", System.currentTimeMillis()));
     }
 
-    public void add(String note) {
+    public void add(Note note) {
         notes.add(note);
         toastHelper.show("Note added");
-        showNotification(ADD_NOTE, MessageFormat.format("Added note {0}", note));
+        showNotification(ADD_NOTE, MessageFormat.format("Added note {0}", note.getCaption()));
     }
 
-    public String get(int id) {
+    public Note get(int id) {
         return notes.get(id);
     }
 
-    public void set(int id, String note) {
+    public void set(int id, Note note) {
         notes.set(id, note);
         toastHelper.show("Note edited");
-        showNotification(EDIT_NOTE, MessageFormat.format("Edited note {0}", note));
+        showNotification(EDIT_NOTE, MessageFormat.format("Edited note {0}", note.getCaption()));
     }
 
     public int size() {

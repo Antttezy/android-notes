@@ -9,11 +9,16 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.antkumachev.androidlab19.models.Note;
+
+import java.text.MessageFormat;
+
 public class EditorActivity extends ActivityBase implements TextWatcher {
 
     private EditText editor;
     private AppCompatButton saveBtn;
     private int action_id;
+    private Note note;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,8 +37,8 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
 
             case EDIT_ACTION:
                 EXTRA_ID = getIntent().getIntExtra(getString(R.string.extra_id_res), -1);
-                EXTRA_TEXT = getIntent().getStringExtra(getString(R.string.extra_text_res));
-                editor.setText(EXTRA_TEXT);
+                note = (Note) getIntent().getSerializableExtra(EXTRA_NOTE);
+                editor.setText(MessageFormat.format("{0}{2}{1}", note.getCaption(), note.getContent(), System.lineSeparator()));
                 break;
 
             default:
@@ -58,10 +63,23 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
     }
 
     public void save(View view) {
-        EXTRA_TEXT = editor.getText().toString();
-        getIntent().putExtra(getString(R.string.extra_text_res), EXTRA_TEXT);
+
         getIntent().putExtra(getString(R.string.action_id_res), action_id);
         getIntent().putExtra(getString(R.string.extra_id_res), EXTRA_ID);
+        EXTRA_TEXT = editor.getText().toString();
+
+        int captionSeparator = EXTRA_TEXT.indexOf('\n');
+
+        if (captionSeparator >= 0) {
+
+            String caption = EXTRA_TEXT.substring(0, captionSeparator);
+            String content = EXTRA_TEXT.substring(captionSeparator + 1);
+            getIntent().putExtra(EXTRA_NOTE, new Note(caption, content, System.currentTimeMillis()));
+        } else {
+
+            getIntent().putExtra(EXTRA_NOTE, new Note(EXTRA_TEXT, "", System.currentTimeMillis()));
+        }
+
         setResult(RESULT_OK, getIntent());
         onBackPressed();
     }
@@ -71,4 +89,3 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
         onBackPressed();
     }
 }
-
