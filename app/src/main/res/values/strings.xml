@@ -9,4 +9,5 @@
     <string name="extra_id_res">EXTRA_ID</string>
     <string name="action_id_res">ACTION_ID</string>
     <string name="importance_description">importance</string>
+    <string name="time_btn_text">Set date and time</string>
 </resources>

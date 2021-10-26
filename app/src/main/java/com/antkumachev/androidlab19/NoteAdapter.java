@@ -12,7 +12,11 @@ import android.widget.TextView;
 import com.antkumachev.androidlab19.models.Note;
 import com.antkumachev.androidlab19.models.Priority;
 import com.antkumachev.androidlab19.views.ColoredView;
+import com.google.android.material.timepicker.TimeFormat;
 
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -53,7 +57,8 @@ public class NoteAdapter extends BaseAdapter {
         Note note = context.get(position);
 
         TextView caption = convertView.findViewById(R.id.note_string);
-        caption.setText(note.getCaption());
+        DateFormat df = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+        caption.setText(MessageFormat.format("{0} - {1}", note.getCaption(), df.format(note.getCreationTime())));
 
         ImageView importantSign = convertView.findViewById(R.id.priority_view);
 

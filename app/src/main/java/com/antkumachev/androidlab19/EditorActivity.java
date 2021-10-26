@@ -1,5 +1,6 @@
 package com.antkumachev.androidlab19;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,16 +8,16 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.antkumachev.androidlab19.dialogs.DateTimeDialog;
 import com.antkumachev.androidlab19.models.Note;
 import com.antkumachev.androidlab19.models.Priority;
 
+import java.sql.Time;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 
 public class EditorActivity extends ActivityBase implements TextWatcher {
 
@@ -25,6 +26,7 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
     private int action_id;
     private Note note;
     private Spinner selector;
+    private Time selectedTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
 
             case CREATE_ACTION:
                 selector.setSelection(0);
+                selectedTime = new Time(System.currentTimeMillis());
                 break;
 
             case EDIT_ACTION:
@@ -51,6 +54,7 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
                 note = (Note) getIntent().getSerializableExtra(EXTRA_NOTE);
                 editor.setText(MessageFormat.format("{0}{2}{1}", note.getCaption(), note.getContent(), System.lineSeparator()));
                 selector.setSelection(note.getPriority().ordinal());
+                selectedTime = note.getCreationTime();
                 break;
 
             default:
@@ -86,10 +90,10 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
 
             String caption = EXTRA_TEXT.substring(0, captionSeparator);
             String content = EXTRA_TEXT.substring(captionSeparator + 1);
-            getIntent().putExtra(EXTRA_NOTE, new Note(caption, content, System.currentTimeMillis(), Priority.values()[selector.getSelectedItemPosition()]));
+            getIntent().putExtra(EXTRA_NOTE, new Note(caption, content, selectedTime.getTime(), Priority.values()[selector.getSelectedItemPosition()]));
         } else {
 
-            getIntent().putExtra(EXTRA_NOTE, new Note(EXTRA_TEXT, "", System.currentTimeMillis(), Priority.values()[selector.getSelectedItemPosition()]));
+            getIntent().putExtra(EXTRA_NOTE, new Note(EXTRA_TEXT, "", selectedTime.getTime(), Priority.values()[selector.getSelectedItemPosition()]));
         }
 
         setResult(RESULT_OK, getIntent());
@@ -99,5 +103,17 @@ public class EditorActivity extends ActivityBase implements TextWatcher {
     public void cancel(View view) {
         setResult(RESULT_CANCELED);
         onBackPressed();
+    }
+
+    private DateTimeDialog dialog;
+
+    private void okClick() {
+        selectedTime = dialog.getSelectedTime();
+    }
+
+    public void setDate(View view) {
+        dialog = new DateTimeDialog((dialogInterface, i) -> okClick(), (a,b) -> {});
+
+        dialog.show(getSupportFragmentManager(), "selector");
     }
 }
